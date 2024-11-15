@@ -86,7 +86,7 @@ class Matrix {
         std::tuple<Matrix, Matrix, Matrix> LUPFactorization_Parallel();
         std::tuple<Matrix, Matrix> QRFactorization();
         std::tuple<Matrix, Matrix, Matrix> QRCPFactorization();
-        //std::tuple<Matrix, Matrix, Matrix> QRCPFactorization_Parallel();
+        std::tuple<Matrix, Matrix, Matrix> QRCPFactorization_Parallel();
 
     private:
         int rows;

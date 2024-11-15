@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.24)
 project(MatrixExample VERSION 0.0.1)
 
 # Set the C++ standard to C++17
@@ -19,7 +19,7 @@ add_library(matrix SHARED
 
 # Find OpenMP package
 find_package(OpenMP REQUIRED)
-find_package(Python3 REQUIRED)
+find_package(Python REQUIRED COMPONENTS Interpreter Development)
 target_link_libraries(matrix PUBLIC OpenMP::OpenMP_CXX)
 target_include_directories(matrix PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
@@ -58,6 +58,14 @@ add_executable(LUPFactorizationParallelTest ${CMAKE_CURRENT_SOURCE_DIR}/tests/LU
 target_link_libraries(LUPFactorizationParallelTest PRIVATE matrix)
 add_test(NAME LUPFactorizationParallelTest
         COMMAND LUPFactorizationParallelTest)
+
+add_executable(QRCPFactorizationParallelTest ${CMAKE_CURRENT_SOURCE_DIR}/tests/QRCPFactorizationParallelTest.cpp)
+target_link_libraries(QRCPFactorizationParallelTest PRIVATE matrix)
+add_test(NAME QRCPFactorizationParallelTest
+        COMMAND QRCPFactorizationParallelTest)
+
+include(GNUInstallDirs)
+add_subdirectory(py)
 
 # Install the library, headers, and CMake package configuration files
 install(TARGETS matrix BasicTest LUFactorizationTest LUPFactorizationTest QRFactorizationTest QRCPFactorizationTest LUPFactorizationParallelTest

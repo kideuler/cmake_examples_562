@@ -350,3 +350,88 @@ std::tuple<Matrix, Matrix, Matrix> Matrix::QRCPFactorization() {
 
     return std::make_tuple(Q, R, P);
 }
+
+
+std::tuple<Matrix, Matrix, Matrix> Matrix::QRCPFactorization_Parallel() {
+    if (rows < cols) {
+        throw std::invalid_argument("Matrix must have more rows than columns for QRCP factorization");
+    }
+
+    Matrix Q(rows, cols);
+    Matrix R(cols, cols);
+    Matrix A_C(*this);
+    Matrix P(cols, cols);
+    P.Eye(cols, cols);
+
+    std::vector<int> pivots(cols);
+    for (int i = 0; i < cols; ++i) {
+        pivots[i] = i;
+    }
+
+    for (int k = 0; k < cols; ++k) {
+        // Find the column with the largest norm
+        int maxIndex = k;
+        double maxNorm = 0;
+        for (int j = k; j < cols; ++j) {
+            double norm = 0;
+            for (int i = k; i < rows; ++i) {
+                norm += R(i, j) * R(i, j);
+            }
+            if (norm > maxNorm) {
+                maxNorm = norm;
+                maxIndex = j;
+            }
+        }
+
+        // Swap columns in R and P
+        if (maxIndex != k) {
+            for (int i = 0; i < rows; ++i) {
+                std::swap(A_C(i, k), A_C(i, maxIndex));
+            }
+            for (int i = 0; i < cols; ++i) {
+                std::swap(P(k, i), P(maxIndex, i));
+            }
+            std::swap(pivots[k], pivots[maxIndex]);
+        }
+    }
+    
+    //#pragma omp parallel shared(Q,R,A_C)
+    {
+    for (int k = 0; k < cols; ++k) {
+        // Compute the k-th column of Q
+        #pragma omp parallel for
+        for (int i = 0; i < rows; ++i) {
+            Q(i, k) = A_C(i, k);
+        }
+
+        // Orthogonalize against previous columns
+        for (int j = 0; j < k; ++j) {
+            double dot_product = 0;
+            #pragma omp parallel for reduction(+:dot_product)
+            for (int i = 0; i < rows; ++i) {
+                dot_product += Q(i, j) * A_C(i, k);
+            }
+            R(j, k) = dot_product;
+            #pragma omp parallel for
+            for (int i = 0; i < rows; ++i) {
+                Q(i, k) -= dot_product * Q(i, j);
+            }
+        }
+
+        // Normalize the k-th column of Q
+        double norm = 0;
+        #pragma omp parallel for reduction(+:norm)
+        for (int i = 0; i < rows; ++i) {
+            norm += Q(i, k) * Q(i, k);
+        }
+        norm = std::sqrt(norm);
+        R(k, k) = norm;
+        #pragma omp parallel for
+        for (int i = 0; i < rows; ++i) {
+            Q(i, k) /= norm;
+        }
+    }
+    }
+
+    return std::make_tuple(Q, R, P);
+}
