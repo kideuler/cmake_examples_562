@@ -3,6 +3,7 @@ project(MatrixExample VERSION 0.0.1)
 
 # Set the C++ standard to C++17
 set(CMAKE_CXX_STANDARD 17)
+include(CTest)
 
 # RPATH settings
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
@@ -27,42 +28,7 @@ target_include_directories(matrix PUBLIC
 )
 
 # Add the tests from tests directory
-include(CTest)
-
-add_executable(BasicTest ${CMAKE_CURRENT_SOURCE_DIR}/tests/BasicTest.cpp)
-target_link_libraries(BasicTest PRIVATE matrix)
-add_test(NAME BasicTest
-         COMMAND BasicTest)
-
-add_executable(LUFactorizationTest ${CMAKE_CURRENT_SOURCE_DIR}/tests/LUFactorizationTest.cpp)
-target_link_libraries(LUFactorizationTest PRIVATE matrix)
-add_test(NAME LUFactorizationTest
-         COMMAND LUFactorizationTest)
-
-add_executable(LUPFactorizationTest ${CMAKE_CURRENT_SOURCE_DIR}/tests/LUPFactorizationTest.cpp)
-target_link_libraries(LUPFactorizationTest PRIVATE matrix)
-add_test(NAME LUPFactorizationTest
-        COMMAND LUPFactorizationTest)
-
-add_executable(QRFactorizationTest ${CMAKE_CURRENT_SOURCE_DIR}/tests/QRFactorizationTest.cpp)
-target_link_libraries(QRFactorizationTest PRIVATE matrix)
-add_test(NAME QRFactorizationTest
-         COMMAND QRFactorizationTest)
-
-add_executable(QRCPFactorizationTest ${CMAKE_CURRENT_SOURCE_DIR}/tests/QRCPFactorizationTest.cpp)
-target_link_libraries(QRCPFactorizationTest PRIVATE matrix)
-add_test(NAME QRCPFactorizationTest
-        COMMAND QRCPFactorizationTest)
-
-add_executable(LUPFactorizationParallelTest ${CMAKE_CURRENT_SOURCE_DIR}/tests/LUPFactorizationParallelTest.cpp)
-target_link_libraries(LUPFactorizationParallelTest PRIVATE matrix)
-add_test(NAME LUPFactorizationParallelTest
-        COMMAND LUPFactorizationParallelTest)
-
-add_executable(QRCPFactorizationParallelTest ${CMAKE_CURRENT_SOURCE_DIR}/tests/QRCPFactorizationParallelTest.cpp)
-target_link_libraries(QRCPFactorizationParallelTest PRIVATE matrix)
-add_test(NAME QRCPFactorizationParallelTest
-        COMMAND QRCPFactorizationParallelTest)
+add_subdirectory(tests)
 
 include(GNUInstallDirs)
 add_subdirectory(py)

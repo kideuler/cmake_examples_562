@@ -1,8 +1,9 @@
 #include "Matrix.hpp"
 #include <iostream>
 #include <cassert>
+#include "gtest/gtest.h"
 
-void TestQRFactorization() {
+TEST(TestQRFactorization, QRFactorization) {
     // Create a test matrix
     int n = 30;
     Matrix A(n, n);
@@ -21,9 +22,4 @@ void TestQRFactorization() {
     }
 
     std::cout << "QR Factorization test passed!" << std::endl;
-}
-
-int main() {
-    TestQRFactorization();
-    return 0;
 }

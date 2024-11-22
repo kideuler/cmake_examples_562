@@ -1,8 +1,9 @@
 #include "Matrix.hpp"
 #include <iostream>
 #include <cassert>
+#include "gtest/gtest.h"
 
-void TestLUFactorization() {
+TEST(LUFactorizationTest, LUFactorization) {
     // Create a test matrix
     int n = 30;
     Matrix A(n, n);
@@ -22,9 +23,4 @@ void TestLUFactorization() {
     }
 
     std::cout << "LU Factorization test passed!" << std::endl;
-}
-
-int main() {
-    TestLUFactorization();
-    return 0;
 }

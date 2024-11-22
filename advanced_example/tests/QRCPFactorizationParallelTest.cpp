@@ -1,8 +1,9 @@
 #include "Matrix.hpp"
 #include <iostream>
 #include <cassert>
+#include "gtest/gtest.h"
 
-void TestQRCPFactorizationParallel() {
+TEST(TestQRCPFactorizationParallel, QRCPFactorizationParallel) {
     // Create a test matrix
     int n = 30;
     Matrix A(n, n);
@@ -22,9 +23,4 @@ void TestQRCPFactorizationParallel() {
     }
 
     std::cout << "QRCP Factorization test passed!" << std::endl;
-}
-
-int main() {
-    TestQRCPFactorizationParallel();
-    return 0;
 }

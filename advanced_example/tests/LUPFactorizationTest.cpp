@@ -1,8 +1,9 @@
 #include "Matrix.hpp"
 #include <iostream>
 #include <cassert>
+#include "gtest/gtest.h"
 
-void TestLUPFactorization() {
+TEST(TestLUPFactorization, LUPFactorization) {
     // Create a test matrix
     int n = 50;
     Matrix A(n, n);
@@ -23,9 +24,4 @@ void TestLUPFactorization() {
     }
 
     std::cout << "LUP Factorization test passed!" << std::endl;
-}
-
-int main() {
-    TestLUPFactorization();
-    return 0;
 }
